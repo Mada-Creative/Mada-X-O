@@ -66,6 +66,7 @@
     .price-note { font-size: 16px; color: #000; margin-top: 8px; }
     .disabled { pointer-events: none; opacity: 0.6; }
     a.btn { text-decoration: none !important; }
+    del { color: #888; font-size: 14px; margin-right: 5px; }
   </style>
 </head>
 <body>
@@ -100,7 +101,7 @@
   <div class="result" id="win">
     <p class="message">مبروك! ربحت التحدي 🎉</p>
     <p class="code">كود خصم 70٪: WIN70</p>
-    <p class="price-note">سعر البطاقة بعد الخصم: 119 شيكل فقط</p>
+    <p class="price-note"><del>396 شيكل</del> سعر البطاقة بعد الخصم: 119 شيكل فقط</p>
     <a class="btn" id="whatsappWin" target="_blank" onclick="confirmCoupon(this, 'win')">استعمل الخصم على الواتساب</a>
     <div class="countdown" id="timer70"></div>
     <img src="mada-logo.png" alt="Mada Logo" class="mada-logo">
@@ -109,7 +110,7 @@
   <div class="result" id="lose">
     <p class="message">ما زبطت معك 😢</p>
     <p class="code">كود خصم 40٪: TRY40</p>
-    <p class="price-note">سعر البطاقة بعد الخصم: 198 شيكل</p>
+    <p class="price-note"><del>396 شيكل</del> سعر البطاقة بعد الخصم: 238 شيكل فقط</p>
     <button class="btn" onclick="retryGame()">اعادة المحاولة (مرة وحدة)</button>
     <a class="btn" id="whatsappLose" target="_blank" onclick="confirmCoupon(this, 'lose')">استخدم كود TRY40</a>
     <div class="countdown" id="timer40"></div>
