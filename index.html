@@ -7,10 +7,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-    body { margin: 0; background: #f2f2f2; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+    body { margin: 0; background: #f2f2f2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100vh; overflow: hidden; position: relative; }
     .screen, .game, .result, .timer { display: none; text-align: center; }
     .screen.active, .game.active, .result.active, .timer.active { display: block; animation: fadeIn 0.6s ease forwards; }
     .avatar { width: 120px; animation: wave 1.5s ease-in-out infinite; margin: 20px auto; }
+    .floating-avatar-top { width: 100px; margin-top: 10px; animation: floatIn 1s ease forwards; z-index: 10; }
 
     @keyframes wave {
       0% { transform: rotate(0); }
@@ -21,6 +22,11 @@
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .btn {
       background: #17b978;
       color: white;
@@ -30,7 +36,7 @@
       border-radius: 6px;
       cursor: pointer;
       margin-top: 20px;
-      transition: all 0.4s ease;
+      transition: background 0.3s, transform 0.2s ease;
       text-decoration: none;
       display: inline-block;
     }
@@ -49,6 +55,8 @@
   </style>
 </head>
 <body>
+
+  <img src="avatar.png" alt="Mada Avatar" class="floating-avatar-top">
 
   <div class="screen active" id="intro">
     <img src="avatar.png" alt="Mada" class="avatar">
@@ -75,7 +83,7 @@
   <div class="result" id="win">
     <p class="message">مبروك! ربحت التحدي 🎉</p>
     <p class="code">كود خصم 70٪: WIN70</p>
-    <a class="btn" id="whatsappWin" onclick="confirmCoupon(this, 'win')">استعمل الخصم على الواتساب</a>
+    <a class="btn" id="whatsappWin" target="_blank" onclick="confirmCoupon(this, 'win')">استعمل الخصم على الواتساب</a>
     <div class="countdown" id="timer70"></div>
   </div>
 
@@ -83,7 +91,7 @@
     <p class="message">ما زبطت معك 😢</p>
     <p class="code">كود خصم 40٪: TRY40</p>
     <button class="btn" onclick="retryGame()">اعادة المحاولة (مرة وحدة)</button>
-    <a class="btn" id="whatsappLose" onclick="confirmCoupon(this, 'lose')">استخدم كود TRY40</a>
+    <a class="btn" id="whatsappLose" target="_blank" onclick="confirmCoupon(this, 'lose')">استخدم كود TRY40</a>
     <div class="countdown" id="timer40"></div>
   </div>
 
@@ -131,8 +139,8 @@
     function botMove() {
       let empty = board.map((val, i) => val === '' ? i : null).filter(v => v !== null);
       if (empty.length === 0) return endGame(false);
-      let winChance = triedBefore ? 0.9 : 0.5;
-      let idx = Math.random() > winChance ? empty[Math.floor(Math.random() * empty.length)] : empty[0];
+      let winChance = triedBefore ? 0.1 : 0.5;
+      let idx = Math.random() < winChance ? empty[Math.floor(Math.random() * empty.length)] : empty[0];
       board[idx] = bot;
       document.querySelector(`.cell[data-index='${idx}']`).textContent = bot;
       if (checkWin(bot)) return endGame(false);
@@ -171,7 +179,6 @@
 
     function startTimer(elId, seconds, resultId) {
       const el = document.getElementById(elId);
-      const btn = document.querySelector(`#${resultId} .btn`);
       const interval = setInterval(() => {
         seconds--;
         const min = Math.floor(seconds / 60);
@@ -180,7 +187,7 @@
         if (seconds <= 0) {
           clearInterval(interval);
           el.textContent = 'انتهى الوقت ⏱️';
-          btn.style.display = 'none';
+          document.querySelector(`#${resultId} .btn`).style.display = 'none';
         }
       }, 1000);
     }
@@ -189,11 +196,7 @@
       el.textContent = '🎉 مبروك حصلت على الخصم!';
       el.style.background = '#fca311';
       setTimeout(() => {
-        const link = el.href;
-        if (type === 'win') {
-          document.getElementById('whatsappLose').style.display = 'none';
-        }
-        window.open(link, '_blank');
+        window.open(el.href, '_blank');
       }, 500);
     }
   </script>
