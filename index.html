@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,34 +7,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-    body { margin: 0; background: #f2f2f2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100vh; overflow: hidden; position: relative; direction: rtl; }
+    body { margin: 0; background: #f2f2f2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100vh; overflow: hidden; position: relative; }
     .screen, .game, .result, .timer { display: none; text-align: center; }
     .screen.active, .game.active, .result.active, .timer.active { display: block; animation: fadeIn 0.6s ease forwards; }
     .avatar { width: 120px; animation: wave 1.5s ease-in-out infinite; margin: 20px auto; }
     .floating-avatar-top {
       width: 100px;
-      margin: 0 auto;
+      margin: 10px auto;
       animation: floatIn 1s ease forwards;
       z-index: 10;
       display: none;
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
     }
-    .screen > p, .screen > button {
-      margin-top: 20vh;
-    }
-    .mada-logo {
-      width: 60px;
-      opacity: 0.6;
-      margin: 10px auto;
+    .game .floating-avatar-top {
       display: block;
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
     }
+
     @keyframes wave {
       0% { transform: rotate(0); }
       50% { transform: rotate(10deg); }
@@ -59,7 +46,7 @@
       cursor: pointer;
       margin-top: 20px;
       transition: background 0.3s, transform 0.2s ease;
-      text-decoration: none !important;
+      text-decoration: none;
       display: inline-block;
     }
     .btn:hover {
@@ -72,22 +59,20 @@
     .message { font-size: 20px; margin: 20px 0; }
     .code { font-size: 24px; font-weight: bold; color: #d62828; }
     .countdown { font-size: 18px; color: #555; margin-top: 10px; }
-    .price-note { font-size: 16px; color: #000; margin-top: 8px; }
     .disabled { pointer-events: none; opacity: 0.6; }
-    del { color: #888; font-size: 14px; margin-right: 5px; }
+    a.btn { text-decoration: none !important; }
   </style>
 </head>
 <body>
 
-  <div class="screen active" id="intro">
-    <img src="avatar.png" alt="Mada Avatar" class="avatar">
-    <p>جاهز تتحداني ونشوف مين بفوز؟</p>
-    <button class="btn" onclick="startPreGame()">يلا نلعب!</button>
-    <img src="mada-logo.png" alt="Mada Logo" class="mada-logo">
-  </div>
-
   <div class="floating-avatar-top">
     <img src="avatar.png" alt="Mada Avatar" style="width:100px;">
+  </div>
+
+  <div class="screen active" id="intro">
+    <img src="avatar.png" alt="Mada" class="avatar">
+    <p>جاهز تتحداني ونشوف مين بفوز؟</p>
+    <button class="btn" onclick="startPreGame()">يلا نلعب!</button>
   </div>
 
   <div class="screen" id="preGame">
@@ -109,129 +94,125 @@
   <div class="result" id="win">
     <p class="message">مبروك! ربحت التحدي 🎉</p>
     <p class="code">كود خصم 70٪: WIN70</p>
-    <p class="price-note"><del>396 شيكل</del> سعر البطاقة بعد الخصم: 119 شيكل فقط</p>
     <a class="btn" id="whatsappWin" target="_blank" onclick="confirmCoupon(this, 'win')">استعمل الخصم على الواتساب</a>
     <div class="countdown" id="timer70"></div>
-    <img src="mada-logo.png" alt="Mada Logo" class="mada-logo">
   </div>
 
   <div class="result" id="lose">
     <p class="message">ما زبطت معك 😢</p>
     <p class="code">كود خصم 40٪: TRY40</p>
-    <p class="price-note"><del>396 شيكل</del> سعر البطاقة بعد الخصم: 238 شيكل فقط</p>
     <button class="btn" onclick="retryGame()">اعادة المحاولة (مرة وحدة)</button>
     <a class="btn" id="whatsappLose" target="_blank" onclick="confirmCoupon(this, 'lose')">استخدم كود TRY40</a>
     <div class="countdown" id="timer40"></div>
-    <img src="mada-logo.png" alt="Mada Logo" class="mada-logo">
   </div>
 
-<script>
-let player = 'X', bot = 'O', board = Array(9).fill(''), gameActive = true, triedBefore = false;
+  <script>
+    let player = 'X', bot = 'O', board = Array(9).fill(''), gameActive = true, triedBefore = false;
 
-const startPreGame = () => switchScreen('intro', 'preGame');
-const chooseSymbol = () => switchScreen('preGame', 'choose');
+    const startPreGame = () => switchScreen('intro', 'preGame');
+    const chooseSymbol = () => switchScreen('preGame', 'choose');
 
-function startGame(symbol) {
-  player = symbol;
-  bot = (symbol === 'X') ? 'O' : 'X';
-  switchScreen('choose', 'gameBoard');
-  renderBoard();
-  if (player !== 'X') botMove();
-  document.querySelector('.floating-avatar-top').style.display = 'block';
-}
-
-function switchScreen(from, to) {
-  document.getElementById(from).classList.remove('active');
-  document.getElementById(to).classList.add('active');
-}
-
-function renderBoard() {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  board = Array(9).fill('');
-  for (let i = 0; i < 9; i++) {
-    const cell = document.createElement('div');
-    cell.classList.add('cell');
-    cell.dataset.index = i;
-    cell.onclick = handlePlayerMove;
-    grid.appendChild(cell);
-  }
-}
-
-function handlePlayerMove(e) {
-  const idx = e.target.dataset.index;
-  if (!gameActive || board[idx]) return;
-  board[idx] = player;
-  e.target.textContent = player;
-  if (checkWin(player)) return endGame(true);
-  botMove();
-}
-
-function botMove() {
-  let empty = board.map((val, i) => val === '' ? i : null).filter(v => v !== null);
-  if (empty.length === 0) return endGame(false);
-  let winChance = triedBefore ? 0.7 : 0.3;
-  let idx = Math.random() < winChance ? empty[Math.floor(Math.random() * empty.length)] : empty[0];
-  board[idx] = bot;
-  document.querySelector(`.cell[data-index='${idx}']`).textContent = bot;
-  if (checkWin(bot)) return endGame(false);
-}
-
-function checkWin(p) {
-  const winPatterns = [
-    [0,1,2],[3,4,5],[6,7,8],
-    [0,3,6],[1,4,7],[2,5,8],
-    [0,4,8],[2,4,6]
-  ];
-  return winPatterns.some(pat => pat.every(i => board[i] === p));
-}
-
-function endGame(playerWon) {
-  gameActive = false;
-  document.querySelector('.floating-avatar-top').style.display = 'none';
-  if (playerWon) {
-    switchScreen('gameBoard', 'win');
-    startTimer('timer70', 600, 'win');
-    document.getElementById('whatsappWin').href = 'https://wa.me/972525272910?text=حابب%20استعمل%20كود%20WIN70%20على%20البطاقة%20الرقمية';
-  } else {
-    switchScreen('gameBoard', 'lose');
-    startTimer('timer40', 600, 'lose');
-    document.getElementById('whatsappLose').href = 'https://wa.me/972525272910?text=حابب%20استعمل%20كود%20TRY40%20على%20البطاقة%20الرقمية';
-  }
-}
-
-function retryGame() {
-  if (triedBefore) return;
-  triedBefore = true;
-  switchScreen('lose', 'gameBoard');
-  renderBoard();
-  gameActive = true;
-  if (player !== 'X') botMove();
-  document.querySelector('.floating-avatar-top').style.display = 'block';
-}
-
-function startTimer(elId, seconds, resultId) {
-  const el = document.getElementById(elId);
-  const interval = setInterval(() => {
-    seconds--;
-    const min = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-    el.textContent = `الوقت المتبقي: ${min}:${sec < 10 ? '0' : ''}${sec}`;
-    if (seconds <= 0) {
-      clearInterval(interval);
-      el.textContent = 'انتهى الوقت ⏱️';
-      document.querySelector(`#${resultId} .btn`).style.display = 'none';
+    function startGame(symbol) {
+      player = symbol;
+      bot = (symbol === 'X') ? 'O' : 'X';
+      switchScreen('choose', 'gameBoard');
+      renderBoard();
+      if (player !== 'X') botMove();
+      document.querySelector('.floating-avatar-top').style.display = 'block';
     }
-  }, 1000);
-}
 
-function confirmCoupon(el, type) {
-  el.textContent = '🎉 مبروك حصلت على الخصم!';
-  el.style.background = '#fca311';
-  setTimeout(() => {
-    window.open(el.href, '_blank');
-  }, 1000);
-}
-</script>
+    function switchScreen(from, to) {
+      document.getElementById(from).classList.remove('active');
+      document.getElementById(to).classList.add('active');
+    }
+
+    function renderBoard() {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+      board = Array(9).fill('');
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.index = i;
+        cell.onclick = handlePlayerMove;
+        grid.appendChild(cell);
+      }
+    }
+
+    function handlePlayerMove(e) {
+      const idx = e.target.dataset.index;
+      if (!gameActive || board[idx]) return;
+      board[idx] = player;
+      e.target.textContent = player;
+      if (checkWin(player)) return endGame(true);
+      botMove();
+    }
+
+    function botMove() {
+      let empty = board.map((val, i) => val === '' ? i : null).filter(v => v !== null);
+      if (empty.length === 0) return endGame(false);
+      let winChance = triedBefore ? 0.1 : 0.5;
+      let idx = Math.random() < winChance ? empty[Math.floor(Math.random() * empty.length)] : empty[0];
+      board[idx] = bot;
+      document.querySelector(`.cell[data-index='${idx}']`).textContent = bot;
+      if (checkWin(bot)) return endGame(false);
+    }
+
+    function checkWin(p) {
+      const winPatterns = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return winPatterns.some(pat => pat.every(i => board[i] === p));
+    }
+
+    function endGame(playerWon) {
+      gameActive = false;
+      document.querySelector('.floating-avatar-top').style.display = 'none';
+      if (playerWon) {
+        switchScreen('gameBoard', 'win');
+        startTimer('timer70', 180, 'win');
+        document.getElementById('whatsappWin').href = 'https://wa.me/972525272910?text=حابب%20استعمل%20كود%20WIN70%20على%20البطاقة%20الرقمية';
+      } else {
+        switchScreen('gameBoard', 'lose');
+        startTimer('timer40', 1800, 'lose');
+        document.getElementById('whatsappLose').href = 'https://wa.me/972525272910?text=حابب%20استعمل%20كود%20TRY40%20على%20البطاقة%20الرقمية';
+      }
+    }
+
+    function retryGame() {
+      if (triedBefore) return;
+      triedBefore = true;
+      switchScreen('lose', 'gameBoard');
+      renderBoard();
+      gameActive = true;
+      if (player !== 'X') botMove();
+      document.querySelector('.floating-avatar-top').style.display = 'block';
+    }
+
+    function startTimer(elId, seconds, resultId) {
+      const el = document.getElementById(elId);
+      const interval = setInterval(() => {
+        seconds--;
+        const min = Math.floor(seconds / 60);
+        const sec = seconds % 60;
+        el.textContent = `الوقت المتبقي: ${min}:${sec < 10 ? '0' : ''}${sec}`;
+        if (seconds <= 0) {
+          clearInterval(interval);
+          el.textContent = 'انتهى الوقت ⏱️';
+          document.querySelector(`#${resultId} .btn`).style.display = 'none';
+        }
+      }, 1000);
+    }
+
+    function confirmCoupon(el, type) {
+      el.textContent = '🎉 مبروك حصلت على الخصم!';
+      el.style.background = '#fca311';
+      setTimeout(() => {
+        window.open(el.href, '_blank');
+      }, 500);
+    }
+  </script>
 </body>
 </html>
