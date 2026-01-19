@@ -7,8 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-    body { margin: 0; background: #f2f2f2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100vh; overflow: hidden; position: relative; }
-    .screen, .game, .result, .timer { display: none; text-align: center; }
+    body { margin: 0; background: #f2f2f2; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; position: relative; text-align: center; }
+    .screen, .game, .result, .timer { display: none; }
     .screen.active, .game.active, .result.active, .timer.active { display: block; animation: fadeIn 0.6s ease forwards; }
     .avatar { width: 120px; animation: wave 1.5s ease-in-out infinite; margin: 20px auto; }
     .floating-avatar-top {
@@ -56,16 +56,16 @@
     .grid { display: grid; grid-template-columns: repeat(3, 100px); grid-gap: 5px; margin: 20px auto; }
     .cell { background: white; width: 100px; height: 100px; font-size: 40px; display: flex; align-items: center; justify-content: center; border: 2px solid #17b978; cursor: pointer; transition: transform 0.2s ease; }
     .cell:hover { transform: scale(1.05); }
-    .message { font-size: 20px; margin: 20px 0; }
+    .message { font-size: 20px; margin: 20px auto; max-width: 90%; }
     .code { font-size: 24px; font-weight: bold; color: #d62828; }
     .countdown { font-size: 18px; color: #555; margin-top: 10px; }
     .disabled { pointer-events: none; opacity: 0.6; }
     a.btn { text-decoration: none !important; }
     .price-note { font-size: 16px; color: #000; margin-top: 8px; font-weight: bold; }
-    .price-note del { color: #888; font-size: 14px; margin-right: 5px; }
+    .price-note del { color: #888; font-size: 14px; margin-left: 5px; }
   </style>
 </head>
-<body>
+  <body>
 
   <div class="floating-avatar-top">
     <img src="avatar.png" alt="Mada Avatar" style="width:100px;">
