@@ -165,7 +165,7 @@
     function botMove() {
       let empty = board.map((val, i) => val === '' ? i : null).filter(v => v !== null);
       if (empty.length === 0) return endGame(false);
-      let winChance = triedBefore ? 0.1 : 0.9; // 90% فوز للاعب بعد الخسارة
+      let winChance = triedBefore ? 0.3 : 0.7; // 90% فوز للاعب بعد الخسارة
       let idx = Math.random() < winChance ? empty[Math.floor(Math.random() * empty.length)] : empty[0];
       board[idx] = bot;
       document.querySelector(`.cell[data-index='${idx}']`).textContent = bot;
@@ -186,7 +186,7 @@
       document.querySelector('.floating-avatar-top').style.display = 'none';
       if (playerWon) {
         switchScreen('gameBoard', 'win');
-        startTimer('timer70', 180, 'win');
+        startTimer('timer70', 600, 'win');
         document.getElementById('whatsappWin').href = 'https://wa.me/972525272910?text=حابب%20استعمل%20كود%20WIN70%20على%20البطاقة%20الرقمية';
       } else {
         switchScreen('gameBoard', 'lose');
@@ -225,7 +225,7 @@
       el.style.background = '#fca311';
       setTimeout(() => {
         window.open(el.href, '_blank');
-      }, 500);
+      }, 1000);
     }
   </script>
 </body>
