@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-    body { margin: 0; background: #f2f2f2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100vh; overflow: hidden; position: relative; }
+    body { margin: 0; background: #f2f2f2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100vh; overflow: hidden; position: relative; direction: rtl; }
     .screen, .game, .result, .timer { display: none; text-align: center; }
     .screen.active, .game.active, .result.active, .timer.active { display: block; animation: fadeIn 0.6s ease forwards; }
     .avatar { width: 120px; animation: wave 1.5s ease-in-out infinite; margin: 20px auto; }
@@ -18,10 +18,14 @@
       z-index: 10;
       display: none;
     }
-    .game .floating-avatar-top {
-      display: block;
+    .screen > p, .screen > button {
+      margin-top: 30vh;
     }
-
+    .mada-logo {
+      width: 80px;
+      opacity: 0.6;
+      margin: 10px auto;
+    }
     @keyframes wave {
       0% { transform: rotate(0); }
       50% { transform: rotate(10deg); }
@@ -59,6 +63,7 @@
     .message { font-size: 20px; margin: 20px 0; }
     .code { font-size: 24px; font-weight: bold; color: #d62828; }
     .countdown { font-size: 18px; color: #555; margin-top: 10px; }
+    .price-note { font-size: 16px; color: #000; margin-top: 8px; }
     .disabled { pointer-events: none; opacity: 0.6; }
     a.btn { text-decoration: none !important; }
   </style>
@@ -73,6 +78,7 @@
     <img src="avatar.png" alt="Mada" class="avatar">
     <p>جاهز تتحداني ونشوف مين بفوز؟</p>
     <button class="btn" onclick="startPreGame()">يلا نلعب!</button>
+    <img src="mada-logo.png" alt="Mada Logo" class="mada-logo">
   </div>
 
   <div class="screen" id="preGame">
@@ -94,16 +100,20 @@
   <div class="result" id="win">
     <p class="message">مبروك! ربحت التحدي 🎉</p>
     <p class="code">كود خصم 70٪: WIN70</p>
+    <p class="price-note">سعر البطاقة بعد الخصم: 119 شيكل فقط</p>
     <a class="btn" id="whatsappWin" target="_blank" onclick="confirmCoupon(this, 'win')">استعمل الخصم على الواتساب</a>
     <div class="countdown" id="timer70"></div>
+    <img src="mada-logo.png" alt="Mada Logo" class="mada-logo">
   </div>
 
   <div class="result" id="lose">
     <p class="message">ما زبطت معك 😢</p>
     <p class="code">كود خصم 40٪: TRY40</p>
+    <p class="price-note">سعر البطاقة بعد الخصم: 198 شيكل</p>
     <button class="btn" onclick="retryGame()">اعادة المحاولة (مرة وحدة)</button>
     <a class="btn" id="whatsappLose" target="_blank" onclick="confirmCoupon(this, 'lose')">استخدم كود TRY40</a>
     <div class="countdown" id="timer40"></div>
+    <img src="mada-logo.png" alt="Mada Logo" class="mada-logo">
   </div>
 
   <script>
