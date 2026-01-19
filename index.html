@@ -11,7 +11,16 @@
     .screen, .game, .result, .timer { display: none; text-align: center; }
     .screen.active, .game.active, .result.active, .timer.active { display: block; animation: fadeIn 0.6s ease forwards; }
     .avatar { width: 120px; animation: wave 1.5s ease-in-out infinite; margin: 20px auto; }
-    .floating-avatar-top { width: 100px; margin-top: 10px; animation: floatIn 1s ease forwards; z-index: 10; }
+    .floating-avatar-top {
+      width: 100px;
+      margin: 10px auto;
+      animation: floatIn 1s ease forwards;
+      z-index: 10;
+      display: none;
+    }
+    .game .floating-avatar-top {
+      display: block;
+    }
 
     @keyframes wave {
       0% { transform: rotate(0); }
@@ -56,7 +65,9 @@
 </head>
 <body>
 
-  <img src="avatar.png" alt="Mada Avatar" class="floating-avatar-top">
+  <div class="floating-avatar-top">
+    <img src="avatar.png" alt="Mada Avatar" style="width:100px;">
+  </div>
 
   <div class="screen active" id="intro">
     <img src="avatar.png" alt="Mada" class="avatar">
@@ -107,6 +118,7 @@
       switchScreen('choose', 'gameBoard');
       renderBoard();
       if (player !== 'X') botMove();
+      document.querySelector('.floating-avatar-top').style.display = 'block';
     }
 
     function switchScreen(from, to) {
@@ -157,6 +169,7 @@
 
     function endGame(playerWon) {
       gameActive = false;
+      document.querySelector('.floating-avatar-top').style.display = 'none';
       if (playerWon) {
         switchScreen('gameBoard', 'win');
         startTimer('timer70', 180, 'win');
@@ -175,6 +188,7 @@
       renderBoard();
       gameActive = true;
       if (player !== 'X') botMove();
+      document.querySelector('.floating-avatar-top').style.display = 'block';
     }
 
     function startTimer(elId, seconds, resultId) {
