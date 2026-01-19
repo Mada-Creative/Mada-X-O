@@ -13,18 +13,22 @@
     .avatar { width: 120px; animation: wave 1.5s ease-in-out infinite; margin: 20px auto; }
     .floating-avatar-top {
       width: 100px;
-      margin: 10px auto;
+      margin: 0 auto;
       animation: floatIn 1s ease forwards;
       z-index: 10;
       display: none;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
     }
     .screen > p, .screen > button {
-      margin-top: 30vh;
+      margin-top: 20vh;
     }
     .mada-logo {
-      width: 80px;
+      width: 60px;
       opacity: 0.6;
-      margin: 10px auto;
+      margin: 10px auto 20px auto;
     }
     @keyframes wave {
       0% { transform: rotate(0); }
@@ -76,7 +80,6 @@
   </div>
 
   <div class="screen active" id="intro">
-    <img src="avatar.png" alt="Mada" class="avatar">
     <p>جاهز تتحداني ونشوف مين بفوز؟</p>
     <button class="btn" onclick="startPreGame()">يلا نلعب!</button>
     <img src="mada-logo.png" alt="Mada Logo" class="mada-logo">
@@ -162,7 +165,7 @@
     function botMove() {
       let empty = board.map((val, i) => val === '' ? i : null).filter(v => v !== null);
       if (empty.length === 0) return endGame(false);
-      let winChance = triedBefore ? 0.1 : 0.5;
+      let winChance = triedBefore ? 0.1 : 0.9; // 90% فوز للاعب بعد الخسارة
       let idx = Math.random() < winChance ? empty[Math.floor(Math.random() * empty.length)] : empty[0];
       board[idx] = bot;
       document.querySelector(`.cell[data-index='${idx}']`).textContent = bot;
