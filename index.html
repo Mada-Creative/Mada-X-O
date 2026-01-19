@@ -61,6 +61,8 @@
     .countdown { font-size: 18px; color: #555; margin-top: 10px; }
     .disabled { pointer-events: none; opacity: 0.6; }
     a.btn { text-decoration: none !important; }
+    .price-note { font-size: 16px; color: #000; margin-top: 8px; font-weight: bold; }
+    .price-note del { color: #888; font-size: 14px; margin-right: 5px; }
   </style>
 </head>
 <body>
@@ -94,6 +96,7 @@
   <div class="result" id="win">
     <p class="message">مبروك! ربحت التحدي 🎉</p>
     <p class="code">كود خصم 70٪: WIN70</p>
+    <p class="price-note"><del>396 شيكل</del> السعر بعد الخصم: <span style="color:#17b978">119 شيكل فقط</span></p>
     <a class="btn" id="whatsappWin" target="_blank" onclick="confirmCoupon(this, 'win')">استعمل الخصم على الواتساب</a>
     <div class="countdown" id="timer70"></div>
   </div>
@@ -101,6 +104,7 @@
   <div class="result" id="lose">
     <p class="message">ما زبطت معك 😢</p>
     <p class="code">كود خصم 40٪: TRY40</p>
+    <p class="price-note"><del>396 شيكل</del> السعر بعد الخصم: <span style="color:#fca311">238 شيكل فقط</span></p>
     <button class="btn" onclick="retryGame()">اعادة المحاولة (مرة وحدة)</button>
     <a class="btn" id="whatsappLose" target="_blank" onclick="confirmCoupon(this, 'lose')">استخدم كود TRY40</a>
     <div class="countdown" id="timer40"></div>
@@ -172,12 +176,12 @@
       document.querySelector('.floating-avatar-top').style.display = 'none';
       if (playerWon) {
         switchScreen('gameBoard', 'win');
-        startTimer('timer70', 180, 'win');
-        document.getElementById('whatsappWin').href = 'https://wa.me/972525272910?text=حابب%20استعمل%20كود%20WIN70%20على%20البطاقة%20الرقمية';
+        startTimer('timer70', 600, 'win');
+        document.getElementById('whatsappWin').href = 'https://wa.me/972525272910?text=أنا%20فزت%20بالتحدي%20في%20لعبة%20X-O%20وحصلت%20على%20كود%2070٪%20WIN70،%20حابب%20أستعمله%20لشراء%20البطاقة%20الرقمية%20الآن';
       } else {
         switchScreen('gameBoard', 'lose');
-        startTimer('timer40', 1800, 'lose');
-        document.getElementById('whatsappLose').href = 'https://wa.me/972525272910?text=حابب%20استعمل%20كود%20TRY40%20على%20البطاقة%20الرقمية';
+        startTimer('timer40', 600, 'lose');
+        document.getElementById('whatsappLose').href = 'https://wa.me/972525272910?text=أنا%20جربت%20لعبة%20X-O%20وحصلت%20على%20كود%2040٪%20TRY40،%20حابب%20أستعمله%20لشراء%20البطاقة%20الرقمية';
       }
     }
 
